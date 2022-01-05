@@ -1,12 +1,16 @@
 package com.example.rushhour.Dto;
 
 import com.sun.istack.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserRequestDto {
 
     @NotNull
