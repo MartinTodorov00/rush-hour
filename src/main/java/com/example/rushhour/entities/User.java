@@ -2,11 +2,13 @@ package com.example.rushhour.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -21,6 +23,7 @@ public class User {
     @Column(unique=true)
     private String email;
     private String password;
+    private List<Role> roles;
 
     public Long getId() {
         return id;
@@ -60,5 +63,23 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @ManyToMany
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
+    }
+
+    @Transient
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        Collection<GrantedAuthority> authorities = new HashSet<>();
+        for (Role role : roles) {
+            authorities.add(new SimpleGrantedAuthority(role.getName()));
+        }
+        return authorities;
     }
 }

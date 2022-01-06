@@ -1,4 +1,4 @@
-package com.example.rushhour.service;
+package com.example.rushhour.services;
 
 import com.example.rushhour.Dto.UserMapper;
 import com.example.rushhour.Dto.UserRequestDto;
@@ -6,7 +6,7 @@ import com.example.rushhour.Dto.UserResponseDto;
 import com.example.rushhour.Exception.EmailAlreadyExistsException;
 import com.example.rushhour.Exception.UserNotFoundByIdException;
 import com.example.rushhour.entities.User;
-import com.example.rushhour.repository.UserRepository;
+import com.example.rushhour.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -18,8 +18,16 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService {
 
-    private UserRepository userRepository;
-    private UserMapper userMapper;
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
+    private final RoleService roleService;
+
+    @Autowired
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, RoleService roleService) {
+        this.userRepository = userRepository;
+        this.userMapper = userMapper;
+        this.roleService = roleService;
+    }
 
     @Override
     public UserResponseDto create(UserRequestDto userRequestDto) {
@@ -33,19 +41,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserResponseDto> getAll(int page, int size) {
-//        return userRepository.findAll(PageRequest.of(page, size))
-//                .stream()
-//                .map(userMapper::mapUserToUserDto)
-//                .collect(Collectors.toList());
+    public List<UserResponseDto> getAll(int page, int pageSize) {
         List<UserResponseDto> userDtos = userMapper.mapUserListToUserResponseDtoList(userRepository.findAll());
         return new ArrayList<>(userDtos);
     }
 
     @Override
-    public User getById(Long id) {
+    public UserResponseDto getById(Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundByIdException(id));
-        return user;
+        return userMapper.mapUserToUserDto(user);
     }
 
     @Override
@@ -68,8 +72,8 @@ public class UserServiceImpl implements UserService {
         throw new UserNotFoundByIdException(id);
     }
 
-    @Autowired
-    public void setUserRepository(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    @Override
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 }

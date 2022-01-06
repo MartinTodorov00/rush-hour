@@ -1,5 +1,6 @@
 package com.example.rushhour.Dto;
 
+import com.example.rushhour.entities.Role;
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -8,6 +9,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -28,6 +30,7 @@ public class UserRequestDto {
     private String email;
     @NotBlank(message = "Password name is mandatory")
     private String password;
+    private List<Role> roles;
 
     public String getFirstName() {
         return firstName;
@@ -59,5 +62,13 @@ public class UserRequestDto {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
     }
 }

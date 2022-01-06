@@ -2,17 +2,16 @@ package com.example.rushhour.controller;
 
 import com.example.rushhour.Dto.UserRequestDto;
 import com.example.rushhour.Dto.UserResponseDto;
-import com.example.rushhour.entities.User;
-import com.example.rushhour.service.UserService;
+import com.example.rushhour.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
-@RestController("/users")
+@RestController
+@RequestMapping("/users")
 public class UserController {
 
     private UserService userService;
@@ -23,12 +22,13 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<UserResponseDto>> getAll(int page, int size) {
-        return ResponseEntity.ok(userService.getAll(page, size));
+    public ResponseEntity<List<UserResponseDto>> getAll(@RequestParam(value = "page", defaultValue = "0") int page,
+                                                        @RequestParam(value = "pageSize", defaultValue = "2") int pageSize) {
+        return ResponseEntity.ok(userService.getAll(page, pageSize));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getById(@PathVariable("id") Long id) {
+    public ResponseEntity<UserResponseDto> getById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(userService.getById(id));
     }
 
